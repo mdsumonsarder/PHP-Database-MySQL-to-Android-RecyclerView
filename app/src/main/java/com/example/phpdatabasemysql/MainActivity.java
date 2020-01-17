@@ -1,11 +1,14 @@
 package com.example.phpdatabasemysql;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,7 +37,11 @@ public class MainActivity extends AppCompatActivity {
         //RecyclerView;
         recyclerView = findViewById(R.id.recyclerviewid);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        //recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        //GridLayoutManager;
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this,2);
+        recyclerView.setLayoutManager(layoutManager);
 
         arrayList = new ArrayList<JsonDataList>();
 
@@ -102,7 +109,15 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            JsonAdapter adapter = new JsonAdapter(arrayList,getApplicationContext());
+            JsonAdapter adapter = new JsonAdapter(arrayList, getApplicationContext(), new Myclick() {
+                @Override
+                public void onClickMe(View view, int possition) {
+                    String link = arrayList.get(possition).getUser_img();
+                    Intent i = new Intent(MainActivity.this,Main2Activity.class);
+                    i.putExtra("img",link);
+                    startActivity(i);
+                }
+            });
             recyclerView.setAdapter(adapter);
 
 
